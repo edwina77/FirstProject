@@ -493,16 +493,6 @@ input {
     width: 90%;
 }
 
-.radios{
+input{
     display: inline-block;
-}
-label input{
-    display: inline-block;
-    color: white;
-}
-
-
-.goggleInput{
-    width: 50%;
-    
 }

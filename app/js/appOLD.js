@@ -131,9 +131,8 @@ kioskApp.controller('SwitchEm', function($scope, $http) {
                             "stylers": [{"color": "#aed7e4"}]}, {"featureType": "water",
                             "elementType": "labels.text", "stylers": [{"color": "#ffffff"},
                                 {"weight": 0.1}]}, {}
-                    ],
-                scaleControl: true},
-                
+                    ]},
+                /*
                 events: {
                     tilesloaded: function(map) {
                         $scope.$apply(function() {
@@ -141,18 +140,16 @@ kioskApp.controller('SwitchEm', function($scope, $http) {
                             $scope.mapInstance = map;
                              $log.info('this is the map instance', map);
                         });
-                    }
-                  
-                },
+                    },
+                 */
                 center: {
-                    latitude: 40.6743890,
-                    longitude: -73.9455
+                    latitude: 45,
+                    longitude: -73
                 },
                 zoom: 12
             };
             $scope.homemarker = {latitude: 40.6743890, longitude: -73.9455};
             $scope.directionsMarker = {latitude: 40.6743890, longitude: -73.9455};
-            $scope.startPlace=new google.maps.LatLng($scope.homemarker.latitude, $scope.homemarker.longitude);
             //orginal below from Alex
             /*
             $scope.$watch('details', function() {
@@ -168,55 +165,15 @@ kioskApp.controller('SwitchEm', function($scope, $http) {
         var directionsDisplay;
         var directionsService = new google.maps.DirectionsService();
         var directionsDisplay = new google.maps.DirectionsRenderer();
-        $scope.travelMode = google.maps.TravelMode.WALKING;
-    
-        function initialize(){
-            $scope.gmap=$scope.map.control.getGMap();
-            console.log("inited");
-            console.log($scope.gmap);
-            var homeControlDiv = document.createElement('div');
-            var homeControl = new HomeControl(homeControlDiv, $scope.gmap);
-            $scope.gmap.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
-        }
-
-    //var homeControlDiv = document.createElement('div');
-    //var homeControl = new HomeControl(homeControlDiv, $scope.gmap);
-//  homeControlDiv.index = 1;
-  //$scope.gmap.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
-  
-       
-      
-        function HomeControl(controlDiv, map) {
-            controlDiv.style.padding = '5px';
-            var controlUI = document.createElement('div');
-            controlUI.style.backgroundColor = 'yellow';
-            controlUI.style.border='1px solid';
-            controlUI.style.cursor = 'pointer';
-            controlUI.style.textAlign = 'center';
-            controlUI.title = 'Set map to Home';
-            controlDiv.appendChild(controlUI);
-            var controlText = document.createElement('div');
-            controlText.style.fontFamily='Arial,sans-serif';
-            controlText.style.fontSize='12px';
-            controlText.style.paddingLeft = '4px';
-            controlText.style.paddingRight = '4px';
-            controlText.innerHTML = '<b>Home<b>'
-            controlUI.appendChild(controlText);
-
-            // Setup click-event listener: simply set the map to London
-            google.maps.event.addDomListener(controlUI, 'click', function() {
-              map.setCenter($scope.startPlace);
-            });
-        }
-        function calcRoute(latN,lngN) {
+       $scope.travelMode = google.maps.TravelMode.WALKING;
+        function calcRoute(latN,lngN, mapInst) {
             console.log("calculate route called");
-            console.log($scope.gmap);
             var endR= new google.maps.LatLng(latN,lngN);
             var startR= new google.maps.LatLng($scope.homemarker.latitude, $scope.homemarker.longitude);
             console.log(endR);
             console.log(startR);
             var request = {
-                origin: $scope.startPlace, // startR,
+                origin:startR,
                 destination:endR,
                 travelMode: $scope.travelMode
             };
@@ -224,7 +181,7 @@ kioskApp.controller('SwitchEm', function($scope, $http) {
                  if (status == google.maps.DirectionsStatus.OK) {
                    console.log("directions ok");
                    directionsDisplay.setDirections(response);
-                   directionsDisplay.setMap($scope.gmap);
+                   directionsDisplay.setMap(mapInst);
                  }
             });
         }
@@ -232,28 +189,25 @@ kioskApp.controller('SwitchEm', function($scope, $http) {
     $scope.$watch('details', function() {
                 //console.log($scope.details);
                 if($scope.details){
-                    //var gmap=$scope.map.control.getGMap();
+                    var gmap=$scope.map.control.getGMap();
                     var lat = $scope.details.geometry.location.lat();
                     var lng = $scope.details.geometry.location.lng();
                     console.log(lat);
                     $scope.destinationMarker = {latitude: lat, longitude: lng};
-                    calcRoute(lat,lng);
+                    calcRoute(lat,lng, gmap);
                 }
     });
 
         $window.navigator.geolocation.getCurrentPosition(function(pos) {
                 var lat = pos.coords.latitude;
                 var lng = pos.coords.longitude;
-                //console.log(pos);
+                console.log(pos);
                 $scope.$apply(function() {
                     $scope.homemarker = {latitude: lat, longitude: lng};
                     $scope.map.center = {latitude: lat, longitude: lng};
                });
             });
-google.maps.event.addDomListener(window, 'load', initialize); 
-$scope.apply();
-
-});
+        });
 
 
 
