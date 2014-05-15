@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Front Kiosk</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/app.css"/>
+
+
+</head>
+<body ng-app="kioskApp">
+
+
+    <div class="mainWrapper" ng-controller="SwitchEm">
+        <div ng-switch on="currentURL" class="leftDiv">
+            <div class="switchClass" ng-switch-when="touchDirectory">
+                <div class="includeClass" ng-include="urls[currentURL]">
+                </div>
+            </div> 
+
+            <div class="switchClass" ng-switch-when="buildingDirectory">
+                <div class="includeClass" ng-include="urls[currentURL]">
+                </div>
+            </div>
+            <div ng-controller="MapCtrl" class="switchClass" ng-switch-when="neighborhoodGuide">
+                <div class="buildingWrapper">
+                    <div class="buttonToBuildDir" ng-click="changeView('buildingDirectory')">
+                        <div class="innerText">
+                            <span class="touchHere">TOUCH HERE</span><span class="FOR">FOR</span><span class="neighBuild">BUILDING</span><span class="guideDir"> DIRECTORY</span>
+                        </div>
+                    </div>
+                    <div class="neighborBottom">
+                        <input type="text"  ng-autocomplete ng-model="autocomplete" options="options" details="details"/>
+                        <label>
+                            <input type="radio" name="travelmode" ng-value="google.maps.TravelMode.WALKING" ng-model="travelMode">
+                            Walking
+                        </label>
+                        <label>
+                            <input type="radio" name="travelmode" ng-value="google.maps.TravelMode.DRIVING" ng-model="travelMode">
+                            Driving
+                        </label>
+                        <label>
+                            <input type="radio" name="travelmode" ng-value="google.maps.TravelMode.BICYCLING" ng-model="travelMode">
+                            Bicycling
+                        </label>
+                        <label>
+                            <input type="radio" name="travelmode" ng-value="google.maps.TravelMode.TRANSIT" ng-model="travelMode">
+                            Transit
+                        </label>
+
+                        <google-map center="map.center" zoom="map.zoom" control="map.control" options="map.options" draggable="true">
+                            <marker icon="'img/blue_marker.png'" animation="Animation.BOUNCE" coords="homemarker"></marker>
+                            <marker  coords="directionsMarker"></marker>
+                        </google-map>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rightDiv">{{url[currentUR]}}
+            <img src="img/rocky.png">
+        </div>
+        <div class="footerWrapper">
+            <img src="img/footer.png">
+        </div>
+    </div>
+
+    <script src="lib/jquery-2.1.1.min.js"></script>
+    <script src="lib/angular.js"></script>
+    <script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAqLx4skhsKnyzazGRCShKgYcmnqmmppGE&sensor=true&libraries=places'></script>  
+    <script src='lib/underscore.js'></script> 
+    <script src='lib/angular-google-mapsNew.js'></script>
+    <script src='lib/ngAutocomplete.js'></script>
+    <script src="lib/angular-route.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/directives.js"></script>
+</body>
+</html>
